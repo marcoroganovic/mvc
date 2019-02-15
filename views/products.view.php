@@ -5,7 +5,7 @@
 <hr />
 
 <?php foreach($data as $key => $value): ?>
-  <h3><a href="/products/<?php echo $value["id"] ?>"><?php echo $value["title"] ?></a></h3>
+  <h3><a href="/products/<?php echo $key ?>"><?php echo $value["title"] ?></a></h3>
   <p><?php echo $value["description"] ?></p>
 <?php endforeach; ?>
 

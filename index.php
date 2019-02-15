@@ -1,6 +1,9 @@
 <?php
 
+ini_set('session.cookie_lifetime', 30 * 60);
+ini_set('session.gc_maxlifetime', 30 * 60);
 session_start();
+
 include "./utils/sessions.php";
 include "./utils/helpers.php";
 include "./utils/path-to-regex.php";

@@ -67,7 +67,7 @@ class Router {
   public function bootstrap($request) {
     $method = $request["REQUEST_METHOD"];
     $uri = $request["REQUEST_URI"];
-    $routes = $this->routes["GET"];
+    $routes = $this->routes[$method];
     $match = null;
 
     foreach($routes as $key => $value) {

@@ -1,11 +1,5 @@
 <?php
 
-$products = array(
-  array("id" => 1, "title" => "Product Name #1", "description" => "Product description", "price" => 10),
-  array("id" => 2, "title" => "Product Name #2", "description" => "Product description", "price" => 30),
-);
-
-
 $app = new Router();
 
 
@@ -38,21 +32,32 @@ $app->get("/logout", function() {
 
 
 $app->get("/products", authenticate(), function($request) {
-  global $products;
+  $products = Products::findAll();
   View::render("products", $products);
 });
 
 
+$app->get("/products/new", authenticate(), function($request) {
+  View::render("product-new");
+});
+
+
 $app->get("/products/:id", authenticate(), function($request) {
-  global $products;
-  $product = array_search(intval($request["params"]["id"]), array_column($products, 'id'));
+  $product = Products::findById($request["params"]["id"]);
   View::render("product", $product);
 });
 
 
-$app->post("/products", authenticate(), function() {
-  $product = Products::create($_POST);
-  redirect("/products/10");
+$app->post("/products", authenticate(), function($request) {
+  $product_id = Products::create(
+    array(
+      "title" => $_POST["title"],
+      "description" => $_POST["description"],
+      "price" => (float) $_POST["price"]     
+    )
+  );
+
+  redirect("/products/" . $product_id);
 });
 
 
@@ -63,8 +68,13 @@ $app->get("/products/:id/edit", authenticate(), function($request) {
 
 
 $app->put("/products/:id/edit", authenticate(), function() {
-  $product = Products::updateById();
-  redirect("/products/10");
+  $product = Products::updateById($request["params"]["id"], array(
+    "title" => $_POST["title"],
+    "description" => $_POST["description"],
+    "price" => (float) $_POST["price"]
+  ));
+
+  redirect("/products/" . request["params"]["id"]);
 });
 
 
@@ -74,16 +84,12 @@ $app->delete("/products/:id", authenticate(), function() {
 });
 
 
-$app->get("/api/products", authenticate(), function() {
-  $products = array(
-    array("title" => "Product Name #1", "description" => "Product description", "price" => 10),
-    array("title" => "Product Name #2", "description" => "Product description", "price" => 30),
-  );
-
+$app->get("/api/products", function() {
+  $products = Products::findAll();
   View::json($products);
 });
 
-$app->get("/api/products/:id", authenticate() , function() {
-  $product = array("title" => "Product Name #1", "description" => "Product description", "price" => 10);
+$app->get("/api/products/:id", authenticate() , function($request) {
+  $product = Products::findById($request["params"]["id"]);
   View::json($product);
 });

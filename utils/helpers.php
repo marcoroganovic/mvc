@@ -5,7 +5,7 @@ function redirect($path) {
 }
 
 function validPassword($password) {
-  return $password == "testtest123";
+  return $password == "test";
 }
 
 function isLoggedIn() {
